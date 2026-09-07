@@ -1,0 +1,155 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "status",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).status"
+              }
+            },
+            {
+              "key": "table_name",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).table_name"
+              }
+            },
+            {
+              "key": "rows_read",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_read"
+              }
+            },
+            {
+              "key": "rows_inserted",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_inserted"
+              }
+            },
+            {
+              "key": "rows_updated",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_updated"
+              }
+            },
+            {
+              "key": "rows_deleted",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_deleted"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Return values",
+        "state": "Active",
+        "dependsOn": [
+          {
+            "activity": "nb_run_table",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "4adc1b70-a524-b462-44de-afca42c73be5",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "table_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_object_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "sequence_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_sequence_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "lakehouse": {
+              "value": {
+                "value": "@pipeline().parameters.p_lakehouse",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "metadata_base_path": {
+              "value": {
+                "value": "@pipeline().parameters.p_metadata_base_path",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "load_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_load_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_processing_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_run_table",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "p_object_name": {
+        "type": "string",
+        "defaultValue": "mappinggrade"
+      },
+      "p_sequence_id": {
+        "type": "string",
+        "defaultValue": "test-nb_run_tabl"
+      },
+      "p_lakehouse": {
+        "type": "string",
+        "defaultValue": "lh_storage"
+      },
+      "p_metadata_base_path": {
+        "type": "string",
+        "defaultValue": "Files/metadata/adp"
+      },
+      "p_load_id": {
+        "type": "string"
+      },
+      "p_processing_id": {
+        "type": "string"
+      }
+    }
+  }
+}

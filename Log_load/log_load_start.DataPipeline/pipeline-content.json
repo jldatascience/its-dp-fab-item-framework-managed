@@ -1,0 +1,89 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "f1b05825-2c5e-b205-45d3-6ac4524a9d2e",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "sequence_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_sequence_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "object_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_object_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processings_count": {
+              "value": {
+                "value": "@pipeline().parameters.p_processings_count",
+                "type": "Expression"
+              },
+              "type": "int"
+            }
+          },
+          "sessionTag": "Logger"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_load_start",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "load_id",
+              "value": {
+                "type": "Expression",
+                "content": "@activity('nb_log_load_start').output.result.exitValue"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Pipeline return load_id",
+        "dependsOn": [
+          {
+            "activity": "nb_log_load_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_sequence_id": {
+        "type": "string",
+        "defaultValue": "seq-test-load"
+      },
+      "p_object_name": {
+        "type": "string",
+        "defaultValue": "objet-test"
+      },
+      "p_processings_count": {
+        "type": "int",
+        "defaultValue": 3
+      }
+    }
+  }
+}

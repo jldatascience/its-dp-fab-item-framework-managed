@@ -1,0 +1,96 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "2fcc57cb-54f8-9899-4423-98b0c5530d1b",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "sequence_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_sequence_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "load_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_load_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "object_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_object_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_processing_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": "Logger"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_processing_start",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "processing_id",
+              "value": {
+                "type": "Expression",
+                "content": "@activity('nb_log_processing_start').output.result.exitValue"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Pipeline return processing_id",
+        "dependsOn": [
+          {
+            "activity": "nb_log_processing_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_sequence_id": {
+        "type": "string"
+      },
+      "p_load_id": {
+        "type": "string"
+      },
+      "p_object_name": {
+        "type": "string"
+      },
+      "p_processing_name": {
+        "type": "string"
+      }
+    }
+  }
+}

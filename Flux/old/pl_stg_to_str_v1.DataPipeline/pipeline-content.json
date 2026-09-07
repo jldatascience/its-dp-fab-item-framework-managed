@@ -1,0 +1,143 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "batch_id": {
+              "value": "@pipeline().parameters.batch_id",
+              "type": "Expression"
+            },
+            "sequence_name": {
+              "value": "@pipeline().parameters.sequence_name",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "b13953d3-b6d2-8424-4b27-3fcacf05caf4",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "727cf65b-4210-44f1-aaf7-ac7f0ab313ca"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "log_sequence_ok",
+        "dependsOn": [
+          {
+            "activity": "pl_run_table",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "batch_id": {
+              "value": "@pipeline().parameters.batch_id",
+              "type": "Expression"
+            },
+            "sequence_name": {
+              "value": "@pipeline().parameters.sequence_name",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "fce42029-91af-af6c-4eea-78ddd3f745e9",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "d219537c-3076-4f0b-8177-34bd815e7418"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "log_sequence_ko",
+        "dependsOn": [
+          {
+            "activity": "pl_run_table",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "table_name": {
+              "value": "@pipeline().parameters.table_name",
+              "type": "Expression"
+            },
+            "batch_id": {
+              "value": "@pipeline().parameters.batch_id",
+              "type": "Expression"
+            },
+            "lakehouse": {
+              "value": "@pipeline().parameters.lakehouse",
+              "type": "Expression"
+            },
+            "metadata_base_path": {
+              "value": "@pipeline().parameters.metadata_base_path",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "1c5af19c-e0c4-bdec-48cf-1cb76a4dc59d",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "727cf65b-4210-44f1-aaf7-ac7f0ab313ca"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "pl_run_table",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "batch_id": {
+        "type": "string",
+        "defaultValue": "\""
+      },
+      "table_name": {
+        "type": "string",
+        "defaultValue": "mappinggrade"
+      },
+      "lakehouse": {
+        "type": "string",
+        "defaultValue": "lh_storage"
+      },
+      "metadata_base_path": {
+        "type": "string",
+        "defaultValue": "Files/metadata/adp"
+      },
+      "sequence_name": {
+        "type": "string",
+        "defaultValue": "daily"
+      }
+    }
+  }
+}

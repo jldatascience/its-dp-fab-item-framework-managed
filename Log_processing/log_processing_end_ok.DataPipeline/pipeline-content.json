@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "acbd1d2d-9264-bc50-4fd1-5dcf88f3b108",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "sequence_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_sequence_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "load_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_load_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_processing_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "object_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_object_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_processing_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": "Logger"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_processing_end_ok",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "p_sequence_id": {
+        "type": "string"
+      },
+      "p_load_id": {
+        "type": "string"
+      },
+      "p_processing_id": {
+        "type": "string"
+      },
+      "p_object_name": {
+        "type": "string"
+      },
+      "p_processing_name": {
+        "type": "string"
+      }
+    }
+  }
+}

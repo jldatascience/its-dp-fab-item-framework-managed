@@ -1,0 +1,249 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "sequence_name": {
+              "value": "@pipeline().parameters.sequence_name",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "fba16789-b38b-8a2b-485b-2ba2a6de97af",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "727cf65b-4210-44f1-aaf7-ac7f0ab313ca"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "pl_sequence",
+        "dependsOn": []
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "p_batch_id": {
+              "value": "@string(activity('pl_sequence').output.properties.returnValue.batch_id)\n",
+              "type": "Expression"
+            },
+            "p_source_table": {
+              "value": "@pipeline().parameters.p_source_table",
+              "type": "Expression"
+            },
+            "p_source_schema": {
+              "value": "@pipeline().parameters.p_source_schema",
+              "type": "Expression"
+            },
+            "p_source_database": {
+              "value": "@pipeline().parameters.p_source_database",
+              "type": "Expression"
+            },
+            "p_table_action": {
+              "value": "@pipeline().parameters.p_table_action",
+              "type": "Expression"
+            },
+            "p_destination_lakehouse": {
+              "value": "@pipeline().parameters.p_lakehouse_stagging",
+              "type": "Expression"
+            },
+            "p_destination_workspace": {
+              "value": "@pipeline().parameters.p_destination_workspace",
+              "type": "Expression"
+            },
+            "p_connection_id": {
+              "value": "@pipeline().parameters.p_connection_id",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "0970e2a4-f8b6-8f8f-4f77-f7382ab95161",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "727cf65b-4210-44f1-aaf7-ac7f0ab313ca"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "pl_src_to_stg",
+        "dependsOn": [
+          {
+            "activity": "pl_sequence",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "p_batch_id": {
+              "value": "@string(activity('pl_sequence').output.properties.returnValue.batch_id)\n",
+              "type": "Expression"
+            },
+            "p_source_table": {
+              "value": "@pipeline().parameters.p_source_table",
+              "type": "Expression"
+            },
+            "p_source_schema": {
+              "value": "@pipeline().parameters.p_source_schema",
+              "type": "Expression"
+            },
+            "p_source_database": {
+              "value": "@pipeline().parameters.p_source_database",
+              "type": "Expression"
+            },
+            "p_table_action": {
+              "value": "@pipeline().parameters.p_table_action",
+              "type": "Expression"
+            },
+            "p_destination_lakehouse": {
+              "value": "@pipeline().parameters.p_lakehouse_stagging",
+              "type": "Expression"
+            },
+            "p_destination_workspace": {
+              "value": "@pipeline().parameters.p_destination_workspace",
+              "type": "Expression"
+            },
+            "p_connection_id": {
+              "value": "@pipeline().parameters.p_connection_id",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "4c7807f2-74da-b290-4155-495cec7ff6a2",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "727cf65b-4210-44f1-aaf7-ac7f0ab313ca"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "pl_src_to_arc",
+        "dependsOn": [
+          {
+            "activity": "pl_src_to_stg",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "batch_id": {
+              "value": "@string(activity('pl_sequence').output.properties.returnValue.batch_id)\n",
+              "type": "Expression"
+            },
+            "table_name": {
+              "value": "@pipeline().parameters.p_source_table",
+              "type": "Expression"
+            },
+            "lakehouse": {
+              "value": "@pipeline().parameters.p_lakehouse_storage",
+              "type": "Expression"
+            },
+            "metadata_base_path": {
+              "value": "@pipeline().parameters.metadata_base_path",
+              "type": "Expression"
+            },
+            "sequence_name": {
+              "value": "@pipeline().parameters.sequence_name",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "17651224-ac80-ae0c-47c5-c3ff7230584f",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "727cf65b-4210-44f1-aaf7-ac7f0ab313ca"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "pl_stg_to_str",
+        "dependsOn": [
+          {
+            "activity": "pl_src_to_arc",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "sequence_name": {
+        "type": "string",
+        "defaultValue": "daily"
+      },
+      "p_source_table": {
+        "type": "string",
+        "defaultValue": "mappinggrade"
+      },
+      "p_source_schema": {
+        "type": "string",
+        "defaultValue": "mdm"
+      },
+      "p_source_database": {
+        "type": "string",
+        "defaultValue": "MDM"
+      },
+      "p_table_action": {
+        "type": "string",
+        "defaultValue": "Overwrite"
+      },
+      "p_lakehouse_stagging": {
+        "type": "string",
+        "defaultValue": "ed697d62-5f1d-4db4-9a35-1b55ab1d12cc"
+      },
+      "p_destination_workspace": {
+        "type": "string",
+        "defaultValue": "a699158a-f604-431c-b9f4-aff776a02c5d"
+      },
+      "p_connection_id": {
+        "type": "string",
+        "defaultValue": "d407c25a-bb22-48a7-916c-256b111a4c9f"
+      },
+      "metadata_base_path": {
+        "type": "string",
+        "defaultValue": "Files/metadata/adp"
+      },
+      "p_lakehouse_storage": {
+        "type": "string",
+        "defaultValue": "lh_storage"
+      }
+    }
+  }
+}

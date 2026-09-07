@@ -1,0 +1,71 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "118737a7-b880-afeb-4d12-0ceb7392ffbe",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "sequence_name": {
+              "value": {
+                "value": "@pipeline().parameters.sequence_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "sequence_id": {
+              "value": "",
+              "type": "string"
+            }
+          },
+          "sessionTag": "Logger"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_sequence_start",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "sequence_id",
+              "value": {
+                "type": "Expression",
+                "content": "@activity('nb_log_sequence_start').output.result.exitValue"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Return value sequence_id",
+        "dependsOn": [
+          {
+            "activity": "nb_log_sequence_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "sequence_name": {
+        "type": "string",
+        "defaultValue": "Daily"
+      }
+    }
+  }
+}

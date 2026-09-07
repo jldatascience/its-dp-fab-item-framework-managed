@@ -1,0 +1,90 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "2293f852-3067-aa56-4089-0016f076de82",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "sequence_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_sequence_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "load_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_load_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_processing_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "object_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_object_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "processing_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_processing_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "error_message": {
+              "value": {
+                "value": "@pipeline().parameters.p_error_message",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": "Logger"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_processing_end_ko",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "p_sequence_id": {
+        "type": "string",
+        "defaultValue": "\""
+      },
+      "p_load_id": {
+        "type": "string",
+        "defaultValue": "profitcenter"
+      },
+      "p_processing_id": {
+        "type": "string",
+        "defaultValue": "\""
+      },
+      "p_object_name": {
+        "type": "string"
+      },
+      "p_processing_name": {
+        "type": "string"
+      },
+      "p_error_message": {
+        "type": "string"
+      }
+    }
+  }
+}

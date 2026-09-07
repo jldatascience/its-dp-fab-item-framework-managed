@@ -1,0 +1,136 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "6a2f5797-df17-ba77-4242-acc94d36cb6a",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "table_name": {
+              "value": {
+                "value": "@pipeline().parameters.p_table_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "batch_id": {
+              "value": {
+                "value": "@pipeline().parameters.p_load_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "lakehouse": {
+              "value": {
+                "value": "@pipeline().parameters.p_lakehouse",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "metadata_base_path": {
+              "value": {
+                "value": "@pipeline().parameters.p_metadata_base_path",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_run_table",
+        "state": "Active",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "status",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).status"
+              }
+            },
+            {
+              "key": "table_name",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).table_name"
+              }
+            },
+            {
+              "key": "rows_read",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_read"
+              }
+            },
+            {
+              "key": "rows_inserted",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_inserted"
+              }
+            },
+            {
+              "key": "rows_updated",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_updated"
+              }
+            },
+            {
+              "key": "rows_deleted",
+              "value": {
+                "type": "Expression",
+                "content": "@json(activity('nb_run_table').output.result.exitValue).rows_deleted"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Return values",
+        "state": "Active",
+        "dependsOn": [
+          {
+            "activity": "nb_run_table",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "p_table_name": {
+        "type": "string",
+        "defaultValue": "mappinggrade"
+      },
+      "p_load_id": {
+        "type": "string",
+        "defaultValue": "test-nb_run_tabl"
+      },
+      "p_lakehouse": {
+        "type": "string",
+        "defaultValue": "lh_storage"
+      },
+      "p_metadata_base_path": {
+        "type": "string",
+        "defaultValue": "Files/metadata/adp"
+      }
+    }
+  }
+}

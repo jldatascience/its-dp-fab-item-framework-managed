@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    include:
+      - feature/its/1_fabric_item_synchronization
+
+pool:
+  vmImage: "ubuntu-24.04"
+
+resources:
+  repositories:
+    - repository: CICD
+      name: "Plateforme Technologique/CICD"
+      type: git
+      ref: "refs/heads/main"
+
+extends:
+  template: PipelineTemplate.yaml@CICD
+
+  parameters:
+    versioning:
+      mode: legacy
+      major: 1
+      minor: 0
+
+    build:       
+      sonarQube:
+        projectKey: Discovery_DP-FAB-Item-Framework-Managed         
+        projectName: "[Discovery] DP FAB Item Framework Managed"
+        qualityGateName: "[Discovery] Starter"
+ 
+      steps:
+        - type: files
+          name: fabric
+          path: ./
+          contents: !**/*.json

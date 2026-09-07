@@ -1,0 +1,66 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "7db3b961-8160-a402-4f4f-7b9696812dbf",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "sequence_name": {
+              "value": {
+                "value": "@pipeline().parameters.sequence_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_sequence_start",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "batch_id",
+              "value": {
+                "type": "Expression",
+                "content": "@activity('nb_log_sequence_start').output.result.exitValue"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Return value batch_id",
+        "dependsOn": [
+          {
+            "activity": "nb_log_sequence_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "sequence_name": {
+        "type": "string",
+        "defaultValue": "Daily"
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "de3d069b-a9fd-af1a-40c9-62f196a05922",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "batch_id": {
+              "value": {
+                "value": "@pipeline().parameters.batch_id",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "table_name": {
+              "value": {
+                "value": "@pipeline().parameters.table_name",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "nb_log_processing_start",
+        "dependsOn": []
+      },
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "processing_id",
+              "value": {
+                "type": "Expression",
+                "content": "@activity('nb_log_processing_start').output.result.exitValue"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Pipeline return processing_id",
+        "dependsOn": [
+          {
+            "activity": "nb_log_processing_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "batch_id": {
+        "type": "string"
+      },
+      "table_name": {
+        "type": "string"
+      }
+    }
+  }
+}
