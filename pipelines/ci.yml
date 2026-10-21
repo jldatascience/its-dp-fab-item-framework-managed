@@ -1,7 +1,18 @@
+# CI.yml — its-dp-fab-item-framework-managed (pipeline Azure DevOps « its-dp-fab-item-framework-managed-CI »)
+# Template KPMG « Plateforme Technologique/CICD » CONSERVÉ : versioning, SonarQube,
+# publication de l'artefact « fabric » (consommé par CD.yml).
+# Changements : déclencheurs develop, release/* et main au lieu de la branche feature
+# (v1.2 : develop → ITG, release/* → PPR, main → PRD) ;
+# la validation de PR est portée par PR-Validation.yml (check GitHub obligatoire).
+# À vérifier (V-01) : le filtre « contents: !/*.json » ne doit pas exclure les fichiers
+# d'items ; la CD échoue explicitement (STRUCT_NO_ITEMS) si l'artefact est incomplet.
 trigger:
   branches:
     include:
-      - feature/its/1_fabric_item_synchronization
+      - develop
+      - release/*
+      - main
+pr: none
 
 pool:
   vmImage: "ubuntu-24.04"
@@ -15,21 +26,18 @@ resources:
 
 extends:
   template: PipelineTemplate.yaml@CICD
-
   parameters:
     versioning:
       mode: legacy
       major: 1
       minor: 0
-
-    build:       
+    build:
       sonarQube:
-        projectKey: Discovery_DP-FAB-Item-Framework-Managed         
+        projectKey: Discovery_DP-FAB-Item-Framework-Managed
         projectName: "[Discovery] DP FAB Item Framework Managed"
         qualityGateName: "[Discovery] Starter"
- 
       steps:
         - type: files
           name: fabric
           path: ./
-          contents: !**/*.json
+          contents: "!/*.json"
