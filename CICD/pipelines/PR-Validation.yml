@@ -17,7 +17,7 @@ resources:
       endpoint: __A_RELEVER__SERVICE_CONNECTION_GITHUB__
       name: __A_RELEVER__ORG_GITHUB__/its-dp-fab-cicd-common
       # Tag immuable du socle commun : toute évolution = nouveau tag + PR ici.
-      ref: refs/tags/v1.3.0
+      ref: refs/tags/v1.4.0
 
 extends:
   template: pipelines/templates/validate-pipeline.yml@cicd_common

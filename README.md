@@ -2,7 +2,7 @@
 
 Dépôt GitHub des items Microsoft Fabric du workspace **Framework**, et de leur configuration de déploiement. Le workspace Framework est le workspace mutualisé des « fonctions sur étagère » : des pipelines et notebooks communs (chargement, journalisation) que les Data Products appellent.
 
-Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déployer et *où*. La logique (contrôles, publication, vérification, rapport) se trouve dans le dépôt socle commun `its-dp-fab-cicd-common`, appelé par le tag `v1.3.0`.
+Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déployer et *où*. La logique (contrôles, publication, vérification, rapport) se trouve dans le dépôt socle commun `its-dp-fab-cicd-common`, appelé par le tag `v1.4.0`.
 
 | Rubrique | Valeur |
 |---|---|
@@ -10,7 +10,7 @@ Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déploy
 | Workspaces | `FR - DP - <ENV> - FAB - Framework - MANAGED` (DEV, ITG, PPR, PRD) |
 | Branches | `develop` (par défaut) · `release/*` · `main` |
 | Pipelines Azure DevOps | CI : `its-dp-fab-item-framework-managed-CI` · CD : à créer depuis `CD.yml`, nom attendu `its-dp-fab-item-framework-managed-cd` · validation de PR : à créer depuis `PR-Validation.yml` |
-| Socle commun | `its-dp-fab-cicd-common`, tag `v1.3.0` |
+| Socle commun | `its-dp-fab-cicd-common`, tag `v1.4.0` |
 | Statut d'inventaire | `pending` : la CD refuse toute publication tant que l'inventaire n'est pas validé sur la branche réelle |
 
 Ne pas confondre ce dépôt avec le **core framework** : c'est le dépôt du code Python/PySpark, qui produit des wheels publiés dans Azure Artifacts et n'est relié à aucun workspace. Ce dépôt-ci ne contient que les **items Fabric** du workspace Framework.
@@ -232,10 +232,10 @@ python ../its-dp-fab-cicd-common/tools/deploy.py validate --repo .
 
 - [ ] Remplacer les marqueurs de `CD.yml` et `PR-Validation.yml` :
   - `__A_RELEVER__` : organisation et service connection GitHub ;
-  - `__A_CONFIRMER_SERVICE_CONNECTION_KEYVAULT_<ENV>__` : une service connection par environnement.
+  - `__A_CONFIRMER_SERVICE_CONNECTION_ARM_<ENV>__` : une service connection Azure Resource Manager distincte par environnement, créée par Ops en fédération d'identité, autorisée à lire les 3 secrets de son environnement dans le coffre unique `frfrkvdevdp0001`.
 - [ ] Déplacer les items sous `fabric/` et passer `repository_directory` à `"../fabric"` **dans la même PR**. Rediriger ensuite la Git Integration du workspace DEV vers le dossier `fabric`.
 - [ ] Lancer `deploy.py validate` sur la branche réelle et confirmer le dossier des notebooks `nb_log_*`.
-- [ ] Copier depuis le portail les noms exacts des workspaces PPR et PRD : ils sont déduits par analogie avec ITG.
+- [x] Noms des workspaces PPR et PRD confirmés le 22/10/2026 : `FR - DP - PPR - FAB - Framework - MANAGED`, `FR - DP - PRD - FAB - Framework - MANAGED`.
 - [ ] Passer `inventory_status` à `validated` dans une PR revue.
 - [ ] Créer la CD sous le nom attendu par les autres dépôts, et accorder au service de build le droit « View builds » sur cette définition (lu par les portes des ADP et BDP).
 - [ ] Faire un **premier run de cette nouvelle CD sur chaque environnement** avant de basculer les ADP et BDP. Un Framework publié par l'ancienne CD est bien présent dans Fabric, mais la porte ne le voit pas (`GATE_NEVER_DEPLOYED`).

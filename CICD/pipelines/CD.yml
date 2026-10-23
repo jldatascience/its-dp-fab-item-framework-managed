@@ -17,7 +17,7 @@ resources:
       endpoint: __A_RELEVER__SERVICE_CONNECTION_GITHUB__
       name: __A_RELEVER__ORG_GITHUB__/its-dp-fab-cicd-common
       # Tag immuable du socle commun : toute évolution = nouveau tag + PR ici.
-      ref: refs/tags/v1.3.0
+      ref: refs/tags/v1.4.0
   pipelines:
     - pipeline: ci
       # Nom EXACT du pipeline CI dans Azure DevOps (sensible à la casse à vérifier).
@@ -40,25 +40,30 @@ extends:
     # (décision D-02 : DEV relié à Git Integration et/ou déployé par fabric-cicd).
     devMode: skip
     lastEnvironment: PRD
-    # Identité de déploiement : SPN de l'environnement (secret client).
-    # Les 3 valeurs <ENV>-AZURE-CLIENT-ID / -CLIENT-SECRET / -TENANT-ID sont lues dans le
-    # coffre frfrkvdevdp0001 par AzureKeyVault@2 (remplace le groupe Fabric-CD-Secrets).
-    # Cible : authMode cli + service connections à fédération d'identité (aucun secret).
+    # ---- Authentification et secrets (socle v1.4.0, décision du 22/10/2026) ---------------
+    # Service connections Azure DevOps (ARM) ≠ connexions Fabric (FABPIPELINES_*, MDS_*) :
+    # les premières authentifient le pipeline auprès d'Azure, les secondes sont utilisées
+    # par les items Fabric à l'exécution (ID en clair dans parameter.yml, jamais dans le coffre).
+    #
+    # Identité qui publie dans Fabric : SPN de l'environnement (authMode: secret). Ses 3 valeurs
+    # <ENV>-AZURE-CLIENT-ID / -CLIENT-SECRET / -TENANT-ID sont lues par AzureKeyVault@2, tâche du
+    # template imposé du socle (seuls les 3 secrets de l'environnement du stage sont lus).
     authMode: secret
     secretSource: keyVault
+    # Coffre UNIQUE pour ITG, PPR et PRD (pas de coffre par environnement).
     keyVaultName: frfrkvdevdp0001
-    # Coffre UNIQUE frfrkvdevdp0001 pour tous les environnements déployés.
-    # serviceConnections = UNE service connection Azure Resource Manager PAR environnement,
-    # autorisée à lire ce coffre (ce n'est PAS le nom du coffre). Noms réels à confirmer : tant
-    # qu'un marqueur est présent, le stage échoue à la compilation ; deux environnements ne
-    # peuvent pas partager la même service connection. RBAC « Key Vault Secrets User » de
-    # chacune limité aux 3 secrets <ENV>-AZURE-* de SON environnement.
-    # DEV : vide car devMode: skip (aucun stage DEV) ; à renseigner si DEV est déployé.
+    # UNE service connection Azure Resource Manager DISTINCTE par environnement, créée par Ops
+    # en fédération d'identité (Workload Identity Federation : aucun secret pour se connecter
+    # à Azure). Ce n'est PAS le nom du coffre. Tant qu'un marqueur est présent, le stage de
+    # cet environnement échoue à la compilation ; deux environnements ne peuvent pas partager
+    # la même service connection. RBAC « Key Vault Secrets User » de chacune limité aux
+    # 3 secrets <ENV>-AZURE-* de SON environnement.
+    # DEV : vide car devMode: skip (DEV est relié à Git, jamais déployé par la CD).
     serviceConnections:
       DEV: ""
-      ITG: __A_CONFIRMER_SERVICE_CONNECTION_KEYVAULT_ITG__
-      PPR: __A_CONFIRMER_SERVICE_CONNECTION_KEYVAULT_PPR__
-      PRD: __A_CONFIRMER_SERVICE_CONNECTION_KEYVAULT_PRD__
+      ITG: __A_CONFIRMER_SERVICE_CONNECTION_ARM_ITG__
+      PPR: __A_CONFIRMER_SERVICE_CONNECTION_ARM_PPR__
+      PRD: __A_CONFIRMER_SERVICE_CONNECTION_ARM_PRD__
     # Le groupe Fabric-CD-Secrets n'est plus référencé. Il reste utilisé par les ANCIENNES CD
     # jusqu'à leur désactivation : ne pas le supprimer avant (backlog B33).
     frameworkGate: ado
