@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Étape 1 — INVENTAIRE depuis Git, MONO-REPO (ce repo uniquement).
 
 À lancer depuis <repo>/CICD/ref_dynamique/. Le script détecte s'il s'agit du

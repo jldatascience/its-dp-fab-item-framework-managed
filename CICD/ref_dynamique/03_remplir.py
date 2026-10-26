@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Étape 3 — REMPLIR les placeholders (local VS Code).
 
 Prend guids_dev.json (étape 2) et remplace chaque <<...>> dans les 4 fichiers

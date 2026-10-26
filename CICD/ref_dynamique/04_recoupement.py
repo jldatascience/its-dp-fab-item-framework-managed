@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Étape 4 — RECOUPEMENT GitHub x Fabric (mono-repo, template aplati).
 
 Lit templates/parameter.yml (le modèle de CE repo), guids_dev.json (étape 2) et
