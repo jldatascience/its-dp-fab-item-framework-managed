@@ -49,8 +49,15 @@ def classe(g):
         if g.startswith(p): return lib
     return "autre (workspace/item/connexion)"
 
+# Dossiers hors périmètre (MODOP) : ne pas inventorier (évite de fausses alertes au recoupement).
+EXCLURE = ("/Tests_", "/Flux/old/", "/Old_processing/", "/Old_sequence/", "/To_delete/")
+def hors_perimetre(path):
+    p = "/" + path.strip("/") + "/"
+    return any(s in p for s in EXCLURE)
+
 def git(repo, *a):
-    r = subprocess.run(["git", "-C", str(repo), *a], capture_output=True, text=True)
+    r = subprocess.run(["git", "-C", str(repo), *a], capture_output=True,
+                       text=True, encoding="utf-8", errors="replace")
     return r.returncode, r.stdout, r.stderr
 def branch_ok(repo, b): return git(repo, "rev-parse", "--verify", "--quiet", b)[0] == 0
 def ls_files(repo, b):
@@ -108,6 +115,8 @@ def inventorier(repo, cfg):
         for f in ls_files(repo, b):
             if f.endswith(".platform"):
                 item_dir = f[:-len("/.platform")] if "/" in f else ""
+                if hors_perimetre(item_dir):
+                    continue
                 ts = path_ts(repo, b, item_dir or f)
                 if item_dir not in choisi or ts > choisi[item_dir][1]:
                     choisi[item_dir] = (b, ts); platform_path[item_dir] = f

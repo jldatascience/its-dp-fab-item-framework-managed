@@ -30,7 +30,8 @@ def detecter_label():
              "Renomme le repo ou lance 01 d'abord.")
 
 def _run(args):
-    try: return subprocess.run(["fab", *args], capture_output=True, text=True)
+    try: return subprocess.run(["fab", *args], capture_output=True,
+                               text=True, encoding="utf-8", errors="replace")
     except FileNotFoundError: sys.exit("Fabric CLI introuvable. pip install ms-fabric-cli, puis `fab auth login`.")
 
 def _body(stdout, ctx):
