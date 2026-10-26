@@ -6,17 +6,21 @@
 # la validation de PR est portée par PR-Validation.yml (check GitHub obligatoire).
 # À vérifier (V-01) : le filtre « contents: !/*.json » ne doit pas exclure les fichiers
 # d'items ; la CD échoue explicitement (STRUCT_NO_ITEMS) si l'artefact est incomplet.
+# ── trigger — branches qui declenchent le build (develop / release/* / main, v1.2)
 trigger:
   branches:
     include:
       - develop
       - release/*
       - main
+# ── pr — la validation de PR est portee par PR-Validation.yml
 pr: none
 
+# ── pool — image d'agent de build
 pool:
   vmImage: "ubuntu-24.04"
 
+# ── resources — template KPMG 'Plateforme Technologique/CICD' conserve
 resources:
   repositories:
     - repository: CICD
@@ -24,6 +28,7 @@ resources:
       type: git
       ref: "refs/heads/main"
 
+# ── extends — etend le template CI KPMG (versioning, SonarQube, artefact 'fabric')
 extends:
   template: PipelineTemplate.yaml@CICD
   parameters:
