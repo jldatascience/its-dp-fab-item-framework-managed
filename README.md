@@ -9,7 +9,7 @@ Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déploy
 | Catégorie | `framework` |
 | Workspaces | `FR - DP - <ENV> - FAB - Framework - MANAGED` (DEV, ITG, PPR, PRD) |
 | Branches | `develop` (par défaut) · `release/*` · `main` |
-| Pipelines Azure DevOps | CI : `its-dp-fab-item-framework-managed-CI` · CD : à créer depuis `CD.yml`, nom attendu `its-dp-fab-item-framework-managed-cd` · validation de PR : à créer depuis `PR-Validation.yml` |
+| Pipelines Azure DevOps | CI : `its-dp-fab-item-framework-managed-CI` · CD : à créer depuis `CICD/pipelines/CD.yml`, nom attendu `its-dp-fab-item-framework-managed-cd` · validation de PR : à créer depuis `CICD/pipelines/PR-Validation.yml` |
 | Socle commun | `its-dp-fab-cicd-common`, tag `v1.4.0` |
 | Statut d'inventaire | `pending` : la CD refuse toute publication tant que l'inventaire n'est pas validé sur la branche réelle |
 
@@ -41,7 +41,7 @@ Conséquences pratiques pour ce dépôt :
 | `pl_load_object` | ADP MDS (`pl_load_tables`) |
 | Autres items | Usages des autres ADP et BDP à inventorier |
 
-Connexion Fabric déclarée dans `deployment/dependencies.yml` et vérifiée au pré-vol : `DP-Fabric-Global-APR` (connexion « Fabric Data Pipelines » des activités InvokePipeline, nom exact à confirmer).
+Connexion Fabric déclarée dans `CICD/deployment/dependencies.yml` et vérifiée au pré-vol : `DP-Fabric-Global-APR` (connexion « Fabric Data Pipelines » des activités InvokePipeline, nom exact à confirmer).
 
 ## Arborescence
 
@@ -50,18 +50,24 @@ Les items sont ceux de l'inventaire du MODOP. La liste exacte se confirme sur la
 ```text
 its-dp-fab-item-framework-managed/         branches develop (défaut) · release/* · main
 │
+├── CHANGES.md                           # changements du dépôt
+├── README.md                            # ce fichier
+│
 │  ── Déploiement (lu par Azure DevOps, jamais publié dans Fabric) ──
-├── CI.yml                           # pipeline ADO its-dp-fab-item-framework-managed-CI
-├── CD.yml                           # pipeline ADO de CD → cd-pipeline.yml@cicd_common
-├── PR-Validation.yml                # check obligatoire des PR → validate-pipeline.yml@cicd_common
-├── CHANGES.md                       # (facultatif) description des changements du dépôt
-├── README.md                        # ce fichier
-├── deployment/
-│   ├── config.yml                   # workspaces « FR - DP - <ENV> - FAB - Framework - MANAGED »,
-│   │                                #   repository_directory: "../fabric", types, exclusions
-│   ├── parameter.yml                # 56 règles (28 activités) : $workspace.$id / $items…
-│   └── dependencies.yml             # category framework : aucun prérequis ; data_dependencies,
-│                                    #   connexions, politique des GUID
+├── CICD/
+│   ├── pipelines/
+│   │   ├── CI.yml                       # pipeline ADO its-dp-fab-item-framework-managed-CI
+│   │   ├── CD.yml                       # pipeline ADO de CD → CICD/pipelines/templates/cd-pipeline.yml@cicd_common
+│   │   └── PR-Validation.yml            # check obligatoire des PR → CICD/pipelines/templates/validate-pipeline.yml@cicd_common
+│   ├── deployment/
+│   │   ├── config.yml                   # workspaces « FR - DP - <ENV> - FAB - Framework - MANAGED »,
+│   │   │                                #   repository_directory: "../../fabric", types, exclusions
+│   │   ├── parameter.yml                # 56 règles (28 activités) : $workspace.$id / $items…
+│   │   └── dependencies.yml             # category framework : aucun prérequis ; data_dependencies,
+│   │                                    #   connexions, politique des GUID
+│   └── ref_dynamique/                   # inventaire des références (01_… à 04_….py, lancés depuis ce dossier)
+│       ├── README_resultats_inventaire_framework.md
+│       └── templates/                   #   modèles config.yml / parameter.yml (solution temporaire DEV)
 │
 │  ── Contenu du workspace Framework (Git Integration DEV + publication fabric-cicd) ──
 └── fabric/
@@ -118,7 +124,9 @@ its-dp-fab-item-framework-managed/         branches develop (défaut) · release
     └── env_spark.Environment/                # .platform + Setting/Sparkcompute.yml
 ```
 
-## Exclusions (`deployment/config.yml`)
+`repository_directory` est résolu **relativement au dossier de `config.yml`** (`CICD/deployment/`), par fabric-cicd 1.4.0 comme par le socle : `"../../fabric"` désigne le dossier `fabric/` à la racine du dépôt.
+
+## Exclusions (`CICD/deployment/config.yml`)
 
 ```yaml
 item_types_in_scope: [VariableLibrary, Notebook, DataPipeline, Environment]
@@ -202,7 +210,7 @@ La CD déploie des **définitions d'items** : elle n'exécute aucun pipeline et 
 ## Contribuer
 
 1. Travailler dans le workspace Framework DEV, puis enregistrer sur une branche `feature/*` (Source control de Fabric).
-2. Pour toute nouvelle activité InvokePipeline ou Notebook, ajouter ses deux règles (workspace + item) dans `deployment/parameter.yml`, en `_ALL_` vers le workspace courant.
+2. Pour toute nouvelle activité InvokePipeline ou Notebook, ajouter ses deux règles (workspace + item) dans `CICD/deployment/parameter.yml`, en `_ALL_` vers le workspace courant.
 3. Avant de **renommer ou supprimer** un item, vérifier qu'aucun ADP ou BDP ne l'appelle :
    - chercher son nom dans `framework.items` de leurs `dependencies.yml` ;
    - chercher les références `$workspace…Framework…` dans leurs `parameter.yml`.
@@ -214,26 +222,27 @@ La CD déploie des **définitions d'items** : elle n'exécute aucun pipeline et 
 Pour contrôler le dépôt en local, à partir d'un clone du socle :
 
 ```bash
-python ../its-dp-fab-cicd-common/tools/deploy.py validate --repo .
+python ../its-dp-fab-cicd-common/CICD/tools/deploy.py validate --repo .
 ```
 
 ## Ce qui ne doit pas figurer dans ce dépôt
 
 | Élément | Pourquoi |
 |---|---|
-| `.github/workflows/CI.yml`, `.github/workflows/CD.yml` | Remplacés par `CI.yml`, `CD.yml` et `PR-Validation.yml` à la racine (pipelines Azure DevOps) |
-| `deployment/deploy.py` | Remplacé par `tools/deploy.py` du socle (l'ancien script contenait des ID en dur) |
-| `deployment/check_connection.py` (si présent) | Contrôle des connexions intégré au pré-vol du socle |
-| `pipelines/ci.yml`, `pipelines/ci_v2.yml` | Anciens pipelines ADO, remplacés par `CI.yml` |
+| `.github/workflows/CI.yml`, `.github/workflows/CD.yml` | Remplacés par `CI.yml`, `CD.yml` et `PR-Validation.yml` sous `CICD/pipelines/` (pipelines Azure DevOps) |
+| `deploy.py` dans `deployment/` ou `CICD/deployment/` | Remplacé par `CICD/tools/deploy.py` du socle (l'ancien script contenait des ID en dur) |
+| `check_connection.py` dans `deployment/` ou `CICD/deployment/` (si présent) | Contrôle des connexions intégré au pré-vol du socle |
+| `fabric/pipelines/ci.yml`, `fabric/pipelines/ci_v2.yml` | Anciens pipelines ADO, remplacés par `CICD/pipelines/CI.yml` (encore présents : à retirer) |
 | Items à la racine du dépôt | Déplacés sous `fabric/` |
 | Code Python/PySpark du core framework | Dépôt séparé (wheels publiés dans Azure Artifacts) |
 
 ## Avant le premier déploiement
 
-- [ ] Remplacer les marqueurs de `CD.yml` et `PR-Validation.yml` :
+- [ ] Remplacer les marqueurs de `CICD/pipelines/CD.yml` et `CICD/pipelines/PR-Validation.yml` :
   - `__A_RELEVER__` : organisation et service connection GitHub ;
   - `__A_CONFIRMER_SERVICE_CONNECTION_ARM_<ENV>__` : une service connection Azure Resource Manager distincte par environnement, créée par Ops en fédération d'identité, autorisée à lire les 3 secrets de son environnement dans le coffre unique `frfrkvdevdp0001`.
-- [ ] Déplacer les items sous `fabric/` et passer `repository_directory` à `"../fabric"` **dans la même PR**. Rediriger ensuite la Git Integration du workspace DEV vers le dossier `fabric`.
+- [x] Items sous `fabric/` et `repository_directory` à `"../../fabric"` dans `CICD/deployment/config.yml`.
+- [ ] Rediriger la Git Integration du workspace DEV vers le dossier `fabric`.
 - [ ] Lancer `deploy.py validate` sur la branche réelle et confirmer le dossier des notebooks `nb_log_*`.
 - [x] Noms des workspaces PPR et PRD confirmés le 22/10/2026 : `FR - DP - PPR - FAB - Framework - MANAGED`, `FR - DP - PRD - FAB - Framework - MANAGED`.
 - [ ] Passer `inventory_status` à `validated` dans une PR revue.

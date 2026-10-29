@@ -1,4 +1,4 @@
-# deployment/dependencies.yml — its-dp-fab-item-framework-managed
+# CICD/deployment/dependencies.yml — its-dp-fab-item-framework-managed
 # Fichier propre à la chaîne KPMG (lu par le socle its-dp-fab-cicd-common, pas par fabric-cicd).
 # inventory_status: pending -> la CD refuse toute publication (code 3) tant que l'inventaire
 # des références n'a pas été revérifié sur la branche réelle (deploy.py validate sans erreur).

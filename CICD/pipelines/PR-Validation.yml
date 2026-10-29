@@ -24,4 +24,4 @@ resources:
 
 # ── extends — etend le template de validation de PR du socle
 extends:
-  template: pipelines/templates/validate-pipeline.yml@cicd_common
+  template: CICD/pipelines/templates/validate-pipeline.yml@cicd_common

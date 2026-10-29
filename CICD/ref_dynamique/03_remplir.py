@@ -4,7 +4,7 @@ Prend guids_dev.json (étape 2) et remplace chaque <<...>> dans les 4 fichiers
 modèles (templates/) -> écrit les versions complètes dans sortie/.
 Signale tout placeholder NON résolu (ex. item introuvable = hypothèse MODOP à lever).
 
-Usage : python 03_remplir.py        (depuis le dossier scripts/, templates/ à côté)
+Usage : python 03_remplir.py        (depuis CICD/ref_dynamique/, templates/ à côté)
 """
 import json, re, pathlib
 

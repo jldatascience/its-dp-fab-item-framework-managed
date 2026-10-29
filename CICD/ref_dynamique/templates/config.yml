@@ -14,9 +14,9 @@ core:
     dev: "<<WS_FRAMEWORK_DEV>>"   # FR - DP - DEV - FAB - Framework - MANAGED
     # itg/ppr/prd : a ajouter quand ces workspaces existeront (hors scope equipe Data)
 
-  # ".." tant que les items ne sont pas physiquement sous fabric/ (MODOP section 4, pt 14).
-  repository_directory: ".."
-  # repository_directory: "../fabric"   # a activer dans le MEME commit que le deplacement
+  # Relatif a ce fichier, une fois copie dans CICD/deployment/ : ../../fabric = dossier fabric/
+  # a la racine du depot (les items sont physiquement sous fabric/).
+  repository_directory: "../../fabric"
 
   # Types d'items publies (un type absent ici est silencieusement ignore).
   item_types_in_scope:

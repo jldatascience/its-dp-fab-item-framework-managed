@@ -36,7 +36,7 @@ resources:
 
 # ── extends — etend le template CD du socle : toute la logique de deploiement y est
 extends:
-  template: pipelines/templates/cd-pipeline.yml@cicd_common
+  template: CICD/pipelines/templates/cd-pipeline.yml@cicd_common
   parameters:
     repository: its-dp-fab-item-framework-managed
     role: framework

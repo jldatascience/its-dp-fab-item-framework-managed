@@ -1,4 +1,4 @@
-# deployment/config.yml — its-dp-fab-item-framework-managed
+# CICD/deployment/config.yml — its-dp-fab-item-framework-managed
 # Format fabric-cicd 1.4.0 (deploy_with_config), validé hors ligne par la CI
 # (fabric_cicd._common._config_utils.load_config_file) pour les 4 environnements.
 # Workspaces désignés par leur NOM exact (aucun GUID). Clés en MAJUSCULES : elles
@@ -11,9 +11,9 @@ core:
     ITG: "FR - DP - ITG - FAB - Framework - MANAGED"
     PPR: "FR - DP - PPR - FAB - Framework - MANAGED"
     PRD: "FR - DP - PRD - FAB - Framework - MANAGED"
-  # Relatif à ce fichier : racine de l'artefact. Passer à "../fabric" UNIQUEMENT dans
-  # la même PR que le déplacement physique des items (MODOP section 4, point 14).
-  repository_directory: ".."
+  # Relatif à ce fichier (fabric-cicd 1.4.0 et fabcicd le résolvent depuis le dossier de
+  # config.yml) : CICD/deployment/ → ../../fabric = dossier fabric/ à la racine du dépôt.
+  repository_directory: "../../fabric"
   # Un type absent de cette liste n'est pas publié, sans message : la CI vérifie la
   # cohérence avec les items réellement présents (TYPES_SILENTLY_EXCLUDED).
   item_types_in_scope:

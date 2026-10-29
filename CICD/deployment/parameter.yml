@@ -1,4 +1,4 @@
-# deployment/parameter.yml — its-dp-fab-item-framework-managed
+# CICD/deployment/parameter.yml — its-dp-fab-item-framework-managed
 # Source : MODOP CI/CD sections 3.2 et 3.2bis, Annexe A (28 activités = 56 règles).
 # Toutes les références sont « workspace courant » (_ALL_) : l'item invoqué vit dans
 # le même dépôt et le même workspace que le pipeline appelant.
