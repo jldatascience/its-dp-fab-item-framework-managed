@@ -45,12 +45,10 @@ Connexion Fabric déclarée dans `CICD/deployment/dependencies.yml` et vérifié
 
 ## Arborescence
 
-Les items sont ceux de l'inventaire du MODOP. La liste exacte se confirme sur la branche réelle avec `git ls-tree -r --name-only HEAD`.
-
 ```text
 its-dp-fab-item-framework-managed/         branches develop (défaut) · release/* · main
 │
-├── CHANGES.md                           # changements du dépôt
+├── CHANGELOG.md                         # journal des changements du dépôt (entrées datées)
 ├── README.md                            # ce fichier
 │
 │  ── Déploiement (lu par Azure DevOps, jamais publié dans Fabric) ──
@@ -72,57 +70,68 @@ its-dp-fab-item-framework-managed/         branches develop (défaut) · release
 │  ── Contenu du workspace Framework (Git Integration DEV + publication fabric-cicd) ──
 └── fabric/
     ├── Flux/
-    │   ├── pl_get_ws_lh_ids.DataPipeline/    # invoqué par ADP MDS
-    │   │   ├── .platform
-    │   │   └── pipeline-content.json
-    │   ├── pl_run_table.DataPipeline/        # .platform + pipeline-content.json
-    │   ├── pl_src_to_arc.DataPipeline/       # idem
-    │   ├── pl_src_to_stg.DataPipeline/       # idem
-    │   ├── pl_stg_to_str.DataPipeline/       # idem
-    │   ├── nb_get_ws_lh_ids.Notebook/
-    │   │   ├── .platform
-    │   │   └── notebook-content.py
-    │   ├── nb_run_table.Notebook/            # .platform + notebook-content.py
-    │   └── old/                              # EXCLU du déploiement (versions *_v1)
+    │   ├── 30b76367-6f62-88fd-40ca-0a7a289c3fee.DataPipeline/   # pl_src_to_stg
+    │   ├── 4918bdb7-c84c-8844-455f-f9d2c6c0d5fc.DataPipeline/   # pl_run_table
+    │   ├── 4adc1b70-a524-b462-44de-afca42c73be5.Notebook/       # nb_run_table
+    │   ├── 713e3adf-9d79-b741-4191-8fa01a236557.DataPipeline/   # pl_stg_to_str
+    │   ├── 75ffc0fd-5ffb-8f5b-4fcd-4cfa1cb7b46f.DataPipeline/   # pl_src_to_arc
+    │   └── old/                              # EXCLU (5 items *_v1)
     ├── Log_load/
-    │   ├── log_load_start.DataPipeline/      # .platform + pipeline-content.json
-    │   ├── log_load_end_ok.DataPipeline/
     │   ├── log_load_end_ko.DataPipeline/
-    │   ├── nb_log_load_start.Notebook/       # .platform + notebook-content.py
-    │   ├── nb_log_load_end_ok.Notebook/      #   (dossier des nb_log_* à confirmer)
-    │   └── nb_log_load_end_ko.Notebook/
+    │   ├── log_load_end_ok.DataPipeline/
+    │   ├── log_load_start.DataPipeline/
+    │   ├── nb_log_load_end_ko.Notebook/
+    │   ├── nb_log_load_end_ok.Notebook/
+    │   └── nb_log_load_start.Notebook/
     ├── Log_processing/
-    │   ├── log_processing_start.DataPipeline/
-    │   ├── log_processing_end_ok.DataPipeline/
+    │   ├── Old_processing/                   # EXCLU (6 items *_v1)
     │   ├── log_processing_end_ko.DataPipeline/
-    │   ├── nb_log_processing_start.Notebook/
-    │   ├── nb_log_processing_end_ok.Notebook/
+    │   ├── log_processing_end_ok.DataPipeline/
+    │   ├── log_processing_start.DataPipeline/
     │   ├── nb_log_processing_end_ko.Notebook/
-    │   └── Old_processing/                   # EXCLU
+    │   ├── nb_log_processing_end_ok.Notebook/
+    │   └── nb_log_processing_start.Notebook/
     ├── Log_sequence/
-    │   ├── log_sequence_start.DataPipeline/  # invoqué par ADP MDS
-    │   ├── log_sequence_ok.DataPipeline/     # invoqué par ADP MDS
+    │   ├── Old_sequence/                     # EXCLU (6 items *_v1)
     │   ├── log_sequence_ko.DataPipeline/     # invoqué par ADP MDS
-    │   ├── nb_log_sequence_start.Notebook/
-    │   ├── nb_log_sequence_end_ok.Notebook/
+    │   ├── log_sequence_ok.DataPipeline/     # invoqué par ADP MDS
+    │   ├── log_sequence_start.DataPipeline/  # invoqué par ADP MDS
     │   ├── nb_log_sequence_end_ko.Notebook/
-    │   └── Old_sequence/                     # EXCLU
-    ├── Tests_Integration/                    # EXCLU (nb_build_parameter_yml, vl_env_inventory)
+    │   ├── nb_log_sequence_end_ok.Notebook/
+    │   └── nb_log_sequence_start.Notebook/
+    ├── Testing_notebook.Notebook/
+    │   ├── .platform
+    │   └── notebook-content.py
+    ├── Tests_Intégration/                    # EXCLU
+    │   ├── integration_scd2.Notebook/
+    │   └── testing_notebook Copy.Notebook/
+    ├── env_spark.Environment/
+    │   ├── .platform
+    │   ├── Libraries/
+    │   └── Setting/
+    ├── env_spark_new.Environment/
+    │   ├── .platform
+    │   ├── Libraries/
+    │   └── Setting/
+    ├── nb_generate_dso_views_loop.Notebook/
+    │   ├── .platform
+    │   └── notebook-content.py
+    ├── nb_view_generator.Notebook/
+    │   ├── .platform
+    │   └── notebook-content.py
+    ├── pipelines/                            # fichiers YAML, aucun item Fabric
+    │   ├── ci.yml
+    │   └── ci_v2.yml
     ├── pl_load_object.DataPipeline/          # invoqué par ADP MDS (pl_load_tables)
     │   ├── .platform
     │   └── pipeline-content.json
-    ├── vl_core_config.VariableLibrary/
+    ├── pl_load_object_v1.DataPipeline/
     │   ├── .platform
-    │   ├── variables.json
-    │   ├── settings.json
-    │   └── valueSets/
-    │       └── <value set>.json              # un value set par environnement
-    ├── env_dev.Environment/
-    │   ├── .platform
-    │   └── Setting/
-    │       └── Sparkcompute.yml
-    └── env_spark.Environment/                # .platform + Setting/Sparkcompute.yml
+    │   └── pipeline-content.json
+    └── test.md
 ```
+
+Cette arborescence reflète le contenu du dépôt au 29/10/2026 (`find fabric -maxdepth 2 | sort`), et non l'inventaire du MODOP. Les noms sont ceux du disque. Les items de `Flux/` sont rangés dans des dossiers nommés par GUID : leur nom affiché, lu dans `.platform`, figure en commentaire. Cités par le MODOP mais absents du dépôt à cette date : `pl_get_ws_lh_ids`, `nb_get_ws_lh_ids`, `vl_core_config`, `env_dev`.
 
 `repository_directory` est résolu **relativement au dossier de `config.yml`** (`CICD/deployment/`), par fabric-cicd 1.4.0 comme par le socle : `"../../fabric"` désigne le dossier `fabric/` à la racine du dépôt.
 
@@ -135,7 +144,7 @@ features: [enable_experimental_features, enable_exclude_folder]
 ```
 
 - Les chemins sont relatifs à `fabric/`. Les dossiers exclus restent dans Git mais ne sont **jamais déployés** :
-  - `Tests_Integration/` ;
+  - `Tests_Intégration/` (motif `Tests_`) ;
   - `Flux/old/` ;
   - `Log_processing/Old_processing/` ;
   - `Log_sequence/Old_sequence/` ;
