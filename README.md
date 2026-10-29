@@ -2,7 +2,7 @@
 
 Dépôt GitHub des items Microsoft Fabric du workspace **Framework**, et de leur configuration de déploiement. Le workspace Framework est le workspace mutualisé des « fonctions sur étagère » : des pipelines et notebooks communs (chargement, journalisation) que les Data Products appellent.
 
-Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déployer et *où*. La logique (contrôles, publication, vérification, rapport) se trouve dans le dépôt socle commun `its-dp-fab-cicd-common`, appelé par le tag `v1.4.0`.
+Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déployer et *où*. La logique (contrôles, publication, vérification, rapport) se trouve dans le dépôt socle commun `its-dp-fab-cicd-common`, appelé par le tag `v1.4.1`.
 
 | Rubrique | Valeur |
 |---|---|
@@ -10,7 +10,7 @@ Ce dépôt ne contient **aucun code de déploiement**. Il décrit *quoi* déploy
 | Workspaces | `FR - DP - <ENV> - FAB - Framework - MANAGED` (DEV, ITG, PPR, PRD) |
 | Branches | `develop` (par défaut) · `release/*` · `main` |
 | Pipelines Azure DevOps | CI : `its-dp-fab-item-framework-managed-CI` · CD : à créer depuis `CICD/pipelines/CD.yml`, nom attendu `its-dp-fab-item-framework-managed-cd` · validation de PR : à créer depuis `CICD/pipelines/PR-Validation.yml` |
-| Socle commun | `its-dp-fab-cicd-common`, tag `v1.4.0` |
+| Socle commun | `its-dp-fab-cicd-common`, tag `v1.4.1` |
 | Statut d'inventaire | `pending` : la CD refuse toute publication tant que l'inventaire n'est pas validé sur la branche réelle |
 
 Ne pas confondre ce dépôt avec le **core framework** : c'est le dépôt du code Python/PySpark, qui produit des wheels publiés dans Azure Artifacts et n'est relié à aucun workspace. Ce dépôt-ci ne contient que les **items Fabric** du workspace Framework.

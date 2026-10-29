@@ -20,7 +20,7 @@ resources:
       endpoint: __A_RELEVER__SERVICE_CONNECTION_GITHUB__
       name: __A_RELEVER__ORG_GITHUB__/its-dp-fab-cicd-common
       # Tag immuable du socle commun : toute évolution = nouveau tag + PR ici.
-      ref: refs/tags/v1.4.0
+      ref: refs/tags/v1.4.1
   pipelines:
     - pipeline: ci
       # Nom EXACT du pipeline CI dans Azure DevOps (sensible à la casse à vérifier).
