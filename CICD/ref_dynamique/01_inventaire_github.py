@@ -20,7 +20,10 @@ import json, csv, re, sys, pathlib, subprocess
 BASE = pathlib.Path(__file__).resolve().parent  # sorties À CÔTÉ du script
 
 SOURCES = {
-    "item-framework": {"mode": "branch", "branches": ["develop"]},
+    "item-framework": {
+        "mode": "branch",
+        "branches": ["feature/its/411581_industrialisation_chaine_cicd"]
+    },
     "adp-mds": {"mode": "union", "branches": [
         "feature/its/1_fabric_item_synchronization",
         "feature/its/422278_variables-id-resources-mds",
