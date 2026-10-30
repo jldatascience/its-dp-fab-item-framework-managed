@@ -1,4 +1,4 @@
-"""Étape 2 — VALEURS via Fabric CLI (fab), MONO-REPO.
+"""Étape 2 — VALEURS via Fabric CLI (fab), MONO-REPO : 02_fab_cli.py lit ce qu’il y a dans Fabric DEV
 
 Détecte si ce repo est framework ou mds (nom du dossier ../..) et relève :
   - framework : le workspace Framework DEV + le GUID de chacun de ses items ;

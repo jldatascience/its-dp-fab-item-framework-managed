@@ -1,4 +1,4 @@
-"""Étape 4 — RECOUPEMENT GitHub x Fabric (mono-repo, template aplati).
+"""Étape 4 — RECOUPEMENT GitHub x Fabric (mono-repo, template aplati) : 04_recoupement.py compare Git et tenant
 
 Lit templates/parameter.yml (le modèle de CE repo), guids_dev.json (étape 2) et
 inventaire_<repo>.json (étape 1), et produit :

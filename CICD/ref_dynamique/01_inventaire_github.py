@@ -1,4 +1,4 @@
-"""Étape 1 — INVENTAIRE depuis Git, MONO-REPO (ce repo uniquement).
+"""Étape 1 — INVENTAIRE depuis Git, MONO-REPO (ce repo uniquement) : 01_inventaire_github.py lit ce qu’il y a dans Git
 
 À lancer depuis <repo>/CICD/ref_dynamique/. Le script détecte s'il s'agit du
 repo framework ou mds (d'après le nom du dossier du repo) et lit les bonnes

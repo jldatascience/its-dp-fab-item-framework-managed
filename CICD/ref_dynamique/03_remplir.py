@@ -1,4 +1,4 @@
-"""Étape 3 — REMPLIR les placeholders (local VS Code).
+"""Étape 3 — REMPLIR les placeholders (local VS Code) : 03_remplir.py remplit parameter.yml à partir de ces valeurs
 
 Prend guids_dev.json (étape 2) et remplace chaque <<...>> dans les 4 fichiers
 modèles (templates/) -> écrit les versions complètes dans sortie/.
